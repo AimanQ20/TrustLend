@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TrustLend · Loan Workflow</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="top" id="top">
+  <div class="brand"><span class="logo" aria-hidden="true">T</span><div><h1>TrustLend</h1><p class="sub">Peer-to-peer lending · identity &amp; roles</p></div></div>
+  <nav class="site-nav" aria-label="Main navigation">
+    <a href="index.html#home">Home</a>
+    <a href="index.html#registration">Register / Roles</a>
+    <a href="workflow.html" aria-current="page">Loans</a>
+  </nav>
+  <div class="wallet"><button id="connect" class="primary">Connect wallet</button></div>
+</header>
+<main><section class="card"><h2>Wallet &amp; contract</h2><span id="who">Not connected</span><p id="notice" class="hint">Connect on the same local Hardhat network as Registry.</p></section>
+<section class="card"><h2>Borrower: request loan</h2><label>Loan amount (ETH) <input id="amount" type="text" value="1" /></label> <button id="request" class="primary">Request loan</button><p class="hint">Requires verified BORROWER role.</p></section>
+<section class="card"><h2>Verifier: approve / reject</h2><label>Loan ID <input id="reviewId" type="number" min="1" value="1" /></label> <button id="approve">Approve</button> <button id="reject">Reject</button><p class="hint">Requires active VERIFIER role.</p></section>
+<section class="card"><h2>Loan status</h2><label>Loan ID <input id="loanId" type="number" min="1" value="1" /></label> <button id="load">Load</button> <button id="cancel">Cancel my request</button><pre id="loanResult">-</pre></section>
+<section class="card"><h2>Off-chain event history</h2><button id="events">Refresh events</button><p class="hint">Start workflow-listener.js first. This is a real off-chain read of blockchain logs.</p><pre id="eventResult">-</pre></section>
+<section class="card"><h2>Transaction status</h2><pre id="status">Ready</pre></section></main>
+<script src="vendor/ethers.umd.min.js"></script><script src="workflow.js"></script>
+</body>
+</html>
