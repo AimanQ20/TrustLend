@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>TrustLend - Access &amp; Roles</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="top">
+    <div class="brand"><span class="logo" aria-hidden="true">T</span><div><h1>TrustLend</h1><p class="sub">Peer-to-peer lending · identity &amp; roles</p></div></div>
+    <div class="wallet">
+      <span id="netBadge" class="badge" hidden></span>
+      <span id="accountBadge" class="badge mono" hidden></span>
+      <button id="connectBtn" class="primary">Connect wallet</button>
+    </div>
+  </header>
+
+  <main>
+    <div id="banners">
+      <div id="wrongNet" class="banner warn" hidden>Wrong network. <button id="switchNetBtn">Switch network</button></div>
+      <div id="pausedBanner" class="banner danger" hidden><strong>System paused.</strong> Money-moving actions are stopped by the emergency switch.</div>
+      <div id="serviceBanner" class="banner info" hidden>Off-chain role service is offline: lists are unavailable, but every on-chain action still works.</div>
+    </div>
+
+    <section id="welcome" class="card">
+      <h2>Welcome</h2>
+      <p>Connect a wallet to see your role. Your status and permissions are read directly from the Registry smart contract.
+         Buttons only appear for actions your role allows, <em>and the contract re-checks every action</em>, so hiding a button is a convenience, not security.</p>
+    </section>
+
+    <section id="profileCard" class="card" hidden>
+      <h2>My profile</h2>
+      <dl class="grid">
+        <dt>Wallet</dt><dd id="pAddr" class="mono"></dd>
+        <dt>Status</dt><dd><span id="pStatus" class="pill"></span></dd>
+        <dt>Roles</dt><dd id="pRoles"></dd>
+        <dt>Registered</dt><dd id="pReg"></dd>
+        <dt>Verified</dt><dd id="pVer"></dd>
+        <dt>KYC reference</dt><dd id="pKyc" class="mono small"></dd>
+      </dl>
+      <p id="statusHelp" class="hint"></p>
+    </section>
+
+    <section id="registerCard" class="card" hidden>
+      <h2>Join TrustLend</h2>
+      <p>Pick how you want to use the platform. A credit officer must verify you before you can lend or borrow.</p>
+      <div class="row"><label><input type="checkbox" id="regLender" /> Lender (supply funds)</label>
+        <label><input type="checkbox" id="regBorrower" /> Borrower (request loans)</label></div>
+      <label class="stack">KYC document (stays on your computer)
+        <input type="file" id="kycFile" /></label>
+      <label class="stack">…or type a reference text
+        <input type="text" id="kycText" placeholder="e.g. passport scan ref 2026-11" autocomplete="off" /></label>
+      <p class="hint">Only a <strong>salted hash</strong> goes on-chain. Keep the salt: give it and the document to the verifier off-chain.</p>
+      <p class="mono small">Hash to publish: <span id="kycHash">-</span></p>
+      <p class="mono small">Your salt: <span id="kycSalt">-</span></p>
+      <button id="registerBtn" class="primary">Register</button>
+    </section>
+
+    <section id="verifierCard" class="card" hidden>
+      <h2>Verifier desk <span class="tag">VERIFIER / ADMIN</span></h2>
+      <p class="hint">Users waiting for KYC approval (loaded from the off-chain service, re-checked on-chain).</p>
+      <button id="refreshQueueBtn">Refresh queue</button>
+      <table id="queueTable"><thead><tr><th>Wallet</th><th>KYC reference</th><th>Registered</th><th>Actions</th></tr></thead><tbody></tbody></table>
+      <p id="queueEmpty" class="hint" hidden>Nobody is waiting.</p>
+    </section>
+
+    <section id="adminCard" class="card" hidden>
+      <h2>Admin console <span class="tag">ADMIN</span></h2>
+      <div class="split">
+        <div>
+          <h3>Roles</h3>
+          <label class="stack">Wallet <input type="text" id="admAddr" class="mono" placeholder="0x…" autocomplete="off" /></label>
+          <label class="stack">Role
+            <select id="admRole">
+              <option value="2">PAUSER</option><option value="4">VERIFIER</option><option value="32">ARBITER</option>
+              <option value="8">LENDER</option><option value="16">BORROWER</option>
+            </select></label>
+          <div class="row"><button id="assignBtn" class="primary">Assign role</button><button id="revokeBtn">Revoke role</button></div>
+          <h3>Accounts</h3>
+          <div class="row"><button id="suspendBtn">Suspend wallet</button><button id="reinstateBtn">Reinstate wallet</button></div>
+        </div>
+        <div>
+          <h3>Admin handover (2 steps)</h3>
+          <label class="stack">New admin wallet <input type="text" id="admNew" class="mono" placeholder="0x…" autocomplete="off" /></label>
+          <div class="row"><button id="transferBtn">Start transfer</button><button id="cancelTransferBtn">Cancel</button></div>
+          <p class="hint">Pending admin: <span id="pendingAdmin" class="mono small">-</span></p>
+          <h3>Staff directory</h3>
+          <ul id="staffList" class="plain"></ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="pauseCard" class="card" hidden>
+      <h2>Emergency controls <span class="tag">PAUSER / ADMIN</span></h2>
+      <p class="hint">Pause stops registrations, approvals and role grants (and, through the Registry, every contract that follows it). Only the admin can resume.</p>
+      <div class="row"><button id="pauseBtn" class="danger">Pause system</button><button id="unpauseBtn">Resume system</button></div>
+    </section>
+
+    <section id="slots" class="card" hidden>
+      <h2>Your workspace</h2>
+      <div id="slotBorrower" class="slot" hidden><strong>Borrower</strong>: loan request and repayment screens plug in here (Member 2 / Member 3).</div>
+      <div id="slotLender" class="slot" hidden><strong>Lender</strong>: funding and returns screens plug in here (Member 2 / Member 3).</div>
+      <div id="slotArbiter" class="slot" hidden><strong>Arbiter</strong>: dispute resolution screens plug in here (Member 3).</div>
+    </section>
+
+    <section id="lookupCard" class="card" hidden>
+      <h2>Look up any wallet</h2>
+      <div class="row"><input type="text" id="lookAddr" class="mono grow" placeholder="0x…" autocomplete="off" /><button id="lookBtn">Look up</button></div>
+      <p id="lookResult" class="mono small"></p>
+    </section>
+
+    <section class="card">
+      <h2>Transactions</h2>
+      <ul id="txLog" class="txlog" aria-live="polite"><li class="hint">No transactions yet.</li></ul>
+    </section>
+  </main>
+
+  <script src="vendor/ethers.umd.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

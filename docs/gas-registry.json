@@ -1,0 +1,40 @@
+{
+  "baseline": {
+    "deployGas": "732705",
+    "runtimeBytes": 2351,
+    "register": [
+      "184425",
+      "167337",
+      "167337"
+    ],
+    "assignExisting": [
+      "101370",
+      "84258",
+      "84270"
+    ],
+    "assignStaff": [
+      "185340",
+      "168240",
+      "168240"
+    ]
+  },
+  "optimized": {
+    "deployGas": "1344623",
+    "runtimeBytes": 5702,
+    "register": [
+      "73128",
+      "73140",
+      "73140"
+    ],
+    "assignExisting": [
+      "34230",
+      "34218",
+      "34230"
+    ],
+    "assignStaff": [
+      "54133",
+      "54133",
+      "54133"
+    ]
+  }
+}
