@@ -86,7 +86,7 @@
       setLog(li, title, "pending", `Submitted ${short(tx.hash)}. Waiting for confirmation…`);
       const rc = await tx.wait();
       if (!rc || rc.status !== 1) throw new Error("Transaction failed on-chain.");
-      setLog(li, title, "ok", `Confirmed in block ${rc.blockNumber} · gas used ${rc.gasUsed.toString()} · tx ${short(tx.hash)}`);
+      setLog(li, title, "ok", "Done.");
       await refresh();
     } catch (e) {
       setLog(li, title, "fail", decodeError(e));

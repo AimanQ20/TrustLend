@@ -107,7 +107,7 @@ describe("Frontend (role-based UI shell, wallet connect, tx status/errors)", fun
     await waitFor(() => $(w, "kycHash").textContent.startsWith("0x"), "kyc hash");
     expect($(w, "kycSalt").textContent).to.match(/^0x[0-9a-f]{32}$/);
     $(w, "registerBtn").click();
-    await waitFor(() => logHas(w, "Confirmed in block"), "register confirmed");
+    await waitFor(() => logHas(w, "Done."), "register confirmed");
     await waitFor(() => $(w, "pStatus").textContent === "Pending", "status pending");
     expect($(w, "registerCard").hidden).to.equal(true);
     expect($(w, "pRoles").textContent).to.contain("BORROWER");
@@ -127,7 +127,7 @@ describe("Frontend (role-based UI shell, wallet connect, tx status/errors)", fun
     expect($(w, "pauseCard").hidden).to.equal(true);
     await waitFor(() => $(w, "queueTable").querySelectorAll("tbody tr").length === 1, "queue row");
     [...$(w, "queueTable").querySelectorAll("button")].find((b) => b.textContent === "Verify").click();
-    await waitFor(() => logHas(w, "Confirmed in block"), "verify confirmed");
+    await waitFor(() => logHas(w, "Done."), "verify confirmed");
     await waitFor(() => !$(w, "queueEmpty").hidden, "queue emptied");
     expect(Number(await registry.statusOf(signers[10].address))).to.equal(2);
   });
@@ -149,7 +149,7 @@ describe("Frontend (role-based UI shell, wallet connect, tx status/errors)", fun
     // success path: make signers[12] an arbiter
     $(w, "admRole").value = String(ROLE.ARBITER);
     $(w, "assignBtn").click();
-    await waitFor(() => logHas(w, "Confirmed in block"), "assign confirmed");
+    await waitFor(() => logHas(w, "Done."), "assign confirmed");
     expect(await registry.hasActiveRole(signers[12].address, ROLE.ARBITER)).to.equal(true);
     await waitFor(() => $(w, "staffList").textContent.includes("ARBITER:") && $(w, "staffList").textContent.includes(signers[12].address.slice(0, 6)), "staff directory");
   });

@@ -1,0 +1,16 @@
+[
+  {
+    "operation": "requestLoan",
+    "baselineGas": 106268,
+    "optimizedGas": 84317,
+    "saved": 21951,
+    "changePercent": -20.66
+  },
+  {
+    "operation": "approveLoan",
+    "baselineGas": 41655,
+    "optimizedGas": 41721,
+    "saved": -66,
+    "changePercent": 0.16
+  }
+]

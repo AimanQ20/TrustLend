@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TrustLend · Escrow &amp; Disputes</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="top" id="top">
+  <div class="brand"><span class="logo" aria-hidden="true">T</span><div><h1>TrustLend</h1><p class="sub">Peer-to-peer lending · escrow &amp; disputes</p></div></div>
+  <nav class="site-nav" aria-label="Main navigation">
+    <a href="index.html#home">Home</a>
+    <a href="index.html#registration">Register / Roles</a>
+    <a href="workflow.html">Loans</a>
+    <a href="escrow.html" aria-current="page">Escrow</a>
+  </nav>
+  <div class="wallet"><button id="connect" class="primary">Connect wallet</button></div>
+</header>
+<main>
+<section class="card"><h2>Wallet &amp; contract</h2><span id="who">Not connected</span>
+  <p id="notice" class="hint">Use the same local Hardhat network as the Registry (chain 31337). Account order: lender, borrower, arbiter come from <code>deployment.json</code> demo accounts.</p>
+  <p>Withdrawable balance: <strong id="credit">-</strong> <button id="refreshCredit">Refresh</button></p></section>
+
+<section class="card"><h2>Loan &amp; deposit status</h2>
+  <label>Loan ID <input id="loanId" type="number" min="1" value="1" /></label> <button id="load">Load</button>
+  <pre id="loanResult">-</pre></section>
+
+<section class="card"><h2>Lender: fund an approved loan</h2>
+  <button id="fund" class="primary">Deposit the exact loan amount</button>
+  <p class="hint">Requires an active LENDER. The amount is read from the workflow and must match exactly. Funds stay in escrow until the borrower accepts or a dispute is resolved.</p></section>
+
+<section class="card"><h2>Borrower: accept funds / repay</h2>
+  <button id="release">Release funds to me</button> <button id="repay">Repay principal</button>
+  <p class="hint">Requires the loan's own active BORROWER. Repayment must equal the loan amount (no interest in this version).</p></section>
+
+<section class="card"><h2>Dispute</h2>
+  <button id="dispute">Raise dispute (lender or borrower)</button>
+  <p class="hint">Only while the deposit is still held in escrow. Freezes the money until an arbiter decides.</p>
+  <label><input id="payLender" type="checkbox" checked /> Arbiter: refund the lender (untick to pay the borrower)</label>
+  <button id="resolve">Resolve dispute (ARBITER)</button></section>
+
+<section class="card"><h2>Withdraw</h2><button id="withdraw" class="primary">Withdraw my balance</button>
+  <p class="hint">Pull payment: money is credited first, then you withdraw it.</p></section>
+
+<section class="card"><h2>Escrow history (read straight from the chain)</h2><button id="events">Refresh events</button>
+  <p class="hint">Works without any off-chain service: if the indexer is down, the contract logs are still the source of truth.</p>
+  <pre id="eventResult">-</pre></section>
+
+<section class="card"><h2>Transaction status</h2><pre id="status">Ready</pre></section>
+</main>
+<script src="vendor/ethers.umd.min.js"></script><script src="ui-messages.js"></script><script src="escrow.js"></script>
+<script src="ui-fx.js"></script>
+</body>
+</html>

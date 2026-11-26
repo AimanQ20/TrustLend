@@ -46,8 +46,8 @@ Import demo accounts from the **local Hardhat node's printed development-only ke
 - No personal data or KYC documents are stored in workflow; on-chain borrower address and amount are **public**.
 - Limitations: no loan due dates, interest, dispute resolution, repayment amount or actual funds until Member 3 integrates. Off-chain event feed is read-only, local-only and rebuilds from logs on every request; no persistence.
 
-## Gas evidence (illustrative measurement; final optimization evidence still needed)
-Run `npx hardhat run scripts/gas-workflow.js` for an **illustrative** baseline vs workflow measurement. `WorkflowBaseline` deliberately lacks Registry authorization, so its gas number is **not a fair isolated optimization comparison** and must not be presented as a measured optimization. For final credit, measure `approveLoan` on equivalent baseline and optimized implementations with the same optimizer settings, input state, compiler, and fee-independent receipt `gasUsed`. The optimized contract already packs `borrower` (20 bytes) + `amountWei` (12 bytes) into one slot. **Do not claim measured savings without an actual comparable baseline.** Team rubric needs at least two justified optimizations total and three operation measurements across members. Member 3 compiles the final gas sheet.
+## Gas evidence
+Run `npx hardhat run scripts/gas-workflow.js`. `WorkflowBaseline` has the same Registry authorization, modifiers, checks, events and errors as `CoreWorkflow`; only the `Loan` struct is unpacked. Result: `requestLoan` 106268 to 84317 gas (-20.7%, one storage slot write fewer from packing `borrower` + `uint96 amountWei`); `approveLoan` 41655 to 41721 (+0.2%, no change, so no saving is claimed). Results are also written to `docs/gas-workflow.json`.
 
 ## Report / viva
 Diagram: `Requested → Approved → Funded → Repaid`, plus `Requested → Rejected`, `Requested/Approved → Cancelled`, and `Funded → Disputed`.

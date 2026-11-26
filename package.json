@@ -13,7 +13,14 @@
     "abi": "hardhat compile && node scripts/export-abi.js",
     "service": "node offchain/role-service/index.js",
     "frontend": "node frontend/serve.js",
-    "demo:permissions": "hardhat run scripts/demo-permissions.js --network localhost"
+    "demo:permissions": "hardhat run scripts/demo-permissions.js --network localhost",
+    "deploy:workflow": "hardhat run scripts/deploy-workflow.js --network localhost",
+    "deploy:escrow": "hardhat run scripts/deploy-escrow.js --network localhost",
+    "deploy:all": "node scripts/deploy-all.js localhost",
+    "deploy:sepolia": "node scripts/deploy-all.js sepolia",
+    "gas:escrow": "hardhat run scripts/gas-escrow.js",
+    "demo:attack": "hardhat run scripts/demo-attack.js",
+    "smoke:escrow": "hardhat run scripts/smoke-escrow.js --network localhost"
   },
   "keywords": [
     "blockchain",

@@ -115,7 +115,7 @@ contracts/
     IWorkflow.sol                     proposed workflow interface for Member 3
   gas/
     RegistryBaseline.sol              Registry before/contrast implementation
-    WorkflowBaseline.sol              illustrative, non-equivalent workflow baseline
+    WorkflowBaseline.sol              workflow gas baseline (same authorization, unpacked struct)
   mocks/
     MockGuarded.sol                   downstream access-control test stand-in
     MockWorkflowEscrow.sol            test-only workflow escrow; never deploy
@@ -330,14 +330,14 @@ Registry optimizations:
 
 ### Workflow gas measurement
 
-`npx hardhat run scripts/gas-workflow.js` currently gives an illustrative `approveLoan` measurement:
+`npx hardhat run scripts/gas-workflow.js` compares `WorkflowBaseline` and `CoreWorkflow`. Both use the same Registry authorization, modifiers, checks, events and errors; only the `Loan` struct layout differs.
 
-| Implementation | Gas |
-|---|---:|
-| `WorkflowBaseline.approveLoan` | 26811 |
-| `CoreWorkflow.approveLoan` | 41721 |
+| Operation | Baseline gas | Optimized gas | Change |
+|---|---:|---:|---:|
+| `requestLoan` | 106268 | 84317 | -20.7% |
+| `approveLoan` | 41655 | 41721 | +0.2% (no change) |
 
-The scripts intentionally label this as **not equivalent**: `WorkflowBaseline` omits Registry authorization and CoreWorkflow also performs the Registry checks. Therefore, this result must not be presented as a 55.61% penalty or a workflow optimization saving. The optimized workflow already packs `borrower` and `uint96 amountWei` into a storage slot, but a defensible workflow optimization claim requires an equally secure, comparable baseline under identical compiler and optimizer settings.
+The saving in `requestLoan` comes from packing `borrower` and `uint96 amountWei` into one slot. `approveLoan` reads the same number of slots either way, so no saving is claimed for it.
 
 ## 10. Security
 
@@ -412,3 +412,6 @@ Member 1's permission-only demonstration is also available with:
 ```powershell
 npm run demo:permissions
 ```
+
+## Member 3 package: escrow, deployment, gas sheet, threat model
+See `docs/MEMBER3_README.md`. Quick start: `npx hardhat node`, then `npm run deploy:all`, then `npm run frontend` and open `/escrow.html`. Attack demo: `npm run demo:attack`. Combined documents: `docs/THREAT_MODEL.md`, `docs/GAS_SHEET.md`, `docs/CONTRIBUTION_MATRIX.md`.
